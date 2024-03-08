@@ -16,25 +16,44 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-4">
-                <h2 class="mt-5">Signup</h2>
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div><h2 class="">Signup</h2></div>
+            </div>
                 <form action="{% url 'user_signup' %}" method="post" class="mt-4">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="username">Username:</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
+                        <input type="text" class="form-control" name="username" value="{{username}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Email:</label>
+                        <input type="email" class="form-control" name="email" value="{{email}}" required>
                     </div>
                     <div class="form-group">
                         <label for="password">Password:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <input type="password" class="form-control" value="{{password_in_process}}" name="password1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Confirm Password:</label>
+                        <input type="password" class="form-control" value="{{cpassword_in_process}}" name="password2" required>
                     </div>
                     <div class="d-flex align-items-center">
                         <div><button type="submit" class="btn btn-primary mr-3">Signup</button></div>
                         <div>Already have an account? <a href="{% url 'user_login_form' %}">Login</a></div>
                     </div>
                 </form>
-                {% if error %}
-                <p class="text-danger mt-3">{{ error }}</p>
-                {% endif %}
+                {% if form.errors %}
+<div class="alert alert-danger mt-3" role="alert">
+    <strong>Error(s):</strong>
+    <ul>
+        {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
             </div>
         </div>
     </div>

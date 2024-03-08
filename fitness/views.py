@@ -5,24 +5,51 @@ from django.contrib.auth import authenticate, login, logout
 from health.models import *
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from health.forms import CustomUserCreationForm
 
 
 def user_signup_form(request):
+    if request.user.is_authenticated:
+        return redirect('food_form')
     context = {}
-    return render(request, 'autentication/signup.html', context)
+    return render(request, 'authentication/signup.html', context)
+
 
 def user_signup(request):
-    context = {}
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password_in_process = request.POST.get('password')
-        password = make_password(password_in_process)
-        user = User(username=username, password=password)
-        user.save()
-        login(request, user)
-        return redirect('food_form')
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('food_form')
     else:
-        return redirect('user_signup_form')
+        form = CustomUserCreationForm()
+
+    context = {'form': form}
+    return render(request, 'authentication/signup.html', context)
+
+
+# def user_signup(request):
+#     form = CustomUserCreationForm()
+#     context = {}
+#     if request.method == 'POST':
+#         form = CustomUserCreationForm(request.POST)
+#         username = request.POST.get('username')
+#         email = request.POST.get('email')
+#         password_in_process = request.POST.get('password1')
+#         cpassword_in_process = request.POST.get('password2')
+
+#         if password_in_process != cpassword_in_process:
+#             context['error'] = 'Password do not match'
+#             return render(request, 'authentication/signup.html', context)
+        
+#         if form.is_valid():
+#             form.save()
+#             print('Umais')
+#             return redirect('food_form')
+#         else:
+#             context['form'] = form
+#     return render(request, 'authentication/signup.html', context)
+        
     
     
 def prevent_authenticated_access(view_func):
@@ -41,16 +68,23 @@ def user_logout(request):
 @prevent_authenticated_access
 def user_login_form(request):
     context = {}
-    return render(request, 'autentication/login.html', context)
+    return render(request, 'authentication/login.html', context)
 
 def user_login(request):
     context = {}
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-        login(request, user)
-        return redirect('food_form')
+        try:
+            User.objects.get(username=username)
+            user = authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('food_form')
+        except:
+            context['error'] = 'Username or password is invalid'
+            context['username'] = username
+            context['password'] = password
+            return render(request, 'authentication/login.html', context)
     else:
         return redirect('user_login_form')
     

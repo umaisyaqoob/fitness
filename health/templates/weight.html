@@ -75,7 +75,7 @@
                     <form action="{% url 'weight_form' %}" method="POST">
                         {% csrf_token %}
                 <div class="d-flex">
-                    <div><input type="date" name="date" id="inputDate" class="form-control"></div>
+                    <div><input type="date" name="date" class="form-control"></div>
                     <div class="ml-2"><input type="submit" value="search" class="btn bt-sm btn-danger"></div>
                 </div>
                     </form>
@@ -116,8 +116,8 @@
       <div class="col"><a href="{% url 'food_form' %}" class="btn btn-primary"><i class="fas fa-utensils"></i><br>Food</a></div>
       <div class="col"><a href="{% url 'excercise_form' %}" class="btn btn-success"><i class="fas fa-running"></i><br>Exercise</a></div>
       <div class="col"><a href="{% url 'weight_form' %}" class="btn btn-danger"><i class="fas fa-weight"></i><br>Weight</a></div>
-      <div class="col"><a href="/view_data" class="btn btn-warning"><i class="fas fa-chart-bar"></i><br>Data</a></div>
-      <div class="col"><a href="/view-charts" class="btn btn-info"><i class="fas fa-chart-line"></i><br>Charts</a></div>
+      <div class="col"><a href="#" class="btn btn-warning"><i class="fas fa-chart-bar"></i><br>Data</a></div>
+      <div class="col"><a href="#" class="btn btn-info"><i class="fas fa-chart-line"></i><br>Charts</a></div>
     </div>
   </div>
 </div>

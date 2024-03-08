@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weight - Fitness Tracker</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        body {
+            padding-top: 20px;
+        }
+        .header {
+            background-color: #dc3545; /* Bootstrap's info color */
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+
+<!*** ENTRY FIELD ***>
+
+<body>
+    <div class="header mb-4">
+        <div class="container">
+            <div class="d-flex justify-content-between">
+                <div class="title"><h2>Weight</h2></div>
+                <div class="buttons"><a href="{% url 'user_logout' %}" class="btn btn-warning">Logout</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form action="{% url 'weight' %}" method="post" id="weight-form" class="mb-3">
+                    {% csrf_token %}
+                    <div class="form-group">                       
+                        <input type="text" name="weight" class="form-control" id="weight" placeholder="Weight (lbs)" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-block">Add Weight</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('inputDate').value = today;
+        });
+    </script>
+</body>
+
+
+<!*** LISTED WEIGHT ***>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form id="weight-form" class="mb-3">
+                <!-- Your form inputs and submit button here -->
+            </form>
+            <!-- Line for Today's Weight -->
+            <!-- <div class="d-flex justify-content-between">
+                <strong>Today's Weight:</strong>
+                <strong id="todays-weight">{{individualy_weight}} lbs</strong>
+            </div> -->
+            <div class="row justify-content-between align-items-center mb-3">
+                <div class="col-auto">
+                    <h3>Total Inputs</h3>
+                </div>
+                <div class="col-auto">
+                    <form action="{% url 'weight_form' %}" method="POST">
+                        {% csrf_token %}
+                <div class="d-flex">
+                    <div><input type="date" name="date" id="inputDate" class="form-control"></div>
+                    <div class="ml-2"><input type="submit" value="search" class="btn bt-sm btn-danger"></div>
+                </div>
+                    </form>
+                </div>
+        
+            </div>
+            <table class="table table-hover table-bordered">
+                <tr  class="bg-danger" style="font-size: 20px;">
+                    <th>Weight</th>
+                    <th style="text-align: center;">Date</th>
+                </tr>
+                {% for weight in weight_instance %}
+                <tr>
+                    <td width="50%"><span class="badge badge-danger badge-pill" style="font-size: 20px;">{{weight.weight}} Kg</span></td>
+                    <td width="50%" style="text-align: center;"><span class="badge badge-danger badge-pill"  style="font-size: 20px;">{{weight.date_today}}</span></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!*** NAVIGATION BAR ***>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+
+
+<div class="fixed-bottom navbar-light bg-light">
+  <div class="container text-center">
+    <div class="row">
+      <div class="col"><a href="{% url 'food_form' %}" class="btn btn-primary"><i class="fas fa-utensils"></i><br>Food</a></div>
+      <div class="col"><a href="{% url 'excercise_form' %}" class="btn btn-success"><i class="fas fa-running"></i><br>Exercise</a></div>
+      <div class="col"><a href="{% url 'weight_form' %}" class="btn btn-danger"><i class="fas fa-weight"></i><br>Weight</a></div>
+      <div class="col"><a href="/view_data" class="btn btn-warning"><i class="fas fa-chart-bar"></i><br>Data</a></div>
+      <div class="col"><a href="/view-charts" class="btn btn-info"><i class="fas fa-chart-line"></i><br>Charts</a></div>
+    </div>
+  </div>
+</div>

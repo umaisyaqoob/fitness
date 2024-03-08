@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #D0E4FE; /* Light blue background */
+        }
+        /* Additional custom styles can go here */
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <h2 class="mt-5">Signup</h2>
+                <form action="{% url 'user_signup' %}" method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div><button type="submit" class="btn btn-primary mr-3">Signup</button></div>
+                        <div>Already have an account? <a href="{% url 'user_login_form' %}">Login</a></div>
+                    </div>
+                </form>
+                {% if error %}
+                <p class="text-danger mt-3">{{ error }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Optional: Include Bootstrap JS and Popper.js for interactive components -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,48 +1,30 @@
-<!DOCTYPE html>
-<html>
+{% extends "auth_base.html" %}
 
-<head>
-    <title>Login</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #D0E4FE; /* Light blue background */
-        }
-        /* Additional custom styles can go here */
-    </style>
-</head>
+{% block page_title %}Log in &middot; FitPulse{% endblock %}
+{% block aside_title %}Welcome back to your dashboard.{% endblock %}
+{% block aside_text %}Log your food, exercise and weight exactly the way you left them.{% endblock %}
 
-<body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <h2 class="mt-5">Login</h2>
-                <form action="{% url 'user_login' %}" method="post" class="mt-4">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="username">Username:</label>
-                        <input type="text" class="form-control" id="username" value="{{username}}" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" class="form-control" id="password" value="{{password}}" name="password" required>
-                    </div>
-                <div class="d-flex align-items-center">
-                    <div><button type="submit" class="btn btn-primary mr-3">Login</button></div>
-                    <div>Creat an account? <a href="{% url 'user_signup_form' %}">signup</a></div>
-                </div>
+{% block content %}
+    <h1>Log in</h1>
+    <p class="sub">Enter your details to open your dashboard.</p>
 
-                </form>
-                {% if error %}
-                <p class="text-danger mt-3">{{ error }}</p>
-                {% endif %}
-            </div>
+    {% if error %}
+    <div class="auth-error">{{ error }}</div>
+    {% endif %}
+
+    <form action="{% url 'user_login' %}" method="post">
+        {% csrf_token %}
+        <div class="auth-field">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ username|default_if_none:'' }}" placeholder="your-username" autocomplete="username" required>
         </div>
-    </div>
+        <div class="auth-field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Your password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="auth-submit">Log in <i class="fa-solid fa-arrow-right"></i></button>
+    </form>
 
-    <!-- Optional: Include Bootstrap JS and Popper.js for interactive components -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <p class="auth-alt">Need an account? <a href="{% url 'user_signup_form' %}">Create one</a></p>
+    <p class="auth-note"><i class="fa-solid fa-lock"></i> Your data stays private to your account.</p>
+{% endblock %}

@@ -1,119 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Food - Fitness Tracker</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <style>
-        body {
-            padding-top: 20px;
-        }
-        .header {
-            background-color: #007bff; /* Bootstrap's info color */
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-        .custom-table{
-            height: 100px !important;
-        }
-    </style>
-</head>
+{% extends "base.html" %}
 
+{% block body_class %}theme-food{% endblock %}
+{% block page_subtitle %}Log your meals and keep calories on track{% endblock %}
 
-<!*** ENTRY FIELDS ***>
+{% block content %}
 
-<body>
-    <div class="header mb-4">
-        <div class="container">
-            <div class="d-flex justify-content-between">
-                <div class="title"><h2>Food</h2></div>
-                <div class="buttons"><a href="{% url 'user_logout' %}" class="btn btn-warning">Logout</a></div>
+    <section class="stat-grid">
+        <div class="stat">
+            <span class="stat-label">Entries</span>
+            <strong class="stat-value">{{ food_instance_list|length }}</strong>
+            <span class="stat-hint">meals logged</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Latest meal</span>
+            <strong class="stat-value sm">{{ food_instance_list.0.food|default:"No entries yet" }}</strong>
+            <span class="stat-hint">{{ food_instance_list.0.date_today|date:"M j, Y"|default:"Add your first meal" }}</span>
+        </div>
+        <div class="stat">
+            <span class="stat-label">Latest calories</span>
+            {% if food_instance_list %}
+            <strong class="stat-value">{{ food_instance_list.0.calories }}<small>kcal</small></strong>
+            {% else %}
+            <strong class="stat-value">—<small>kcal</small></strong>
+            {% endif %}
+            <span class="stat-hint">from your most recent entry</span>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="card-head">
+            <div class="head-icon"><i class="fa-solid fa-utensils"></i></div>
+            <div>
+                <h2>Add a meal</h2>
+                <p>Record what you ate and how many calories it came with</p>
             </div>
         </div>
-    </div>
-
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <form  action="{% url 'food' %}" method="post" id="food-form" class="mb-3">
-                    {% csrf_token %}
-                    <div class="form-group">                       
-                        <input type="text" name="food" class="form-control" id="food" placeholder="Food" required>
-                    </div>
-                    <div class="form-group">                        
-                        <input type="number" name="calories" class="form-control" id="calories" placeholder="Calories" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Add Food</button>
-                </form>
-    <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('inputDate').value = today;
-    });
-</script>
-</body>
-
-
-<!*** SUMMARY TABLE ***>
-
-<div class="container">      
-    <div class="row justify-content-between align-items-center mb-3">
-        <div class="col-auto">
-            <h3>Total Inputs</h3>
-        </div>
-        <div class="col-auto">
-            <form action="{% url 'food_form' %}" method="post">
+        <div class="card-body">
+            <form action="{% url 'food' %}" method="post" class="entry-form" id="food-form">
                 {% csrf_token %}
-        <div class="d-flex">
-            <div><input type="date" name="date" class="form-control"></div>
-            <div class="ml-2"><input type="submit" value="search" class="btn bt-sm btn-primary"></div>
-        </div>
+                <div class="field">
+                    <label for="food">Food</label>
+                    <input type="text" name="food" class="input" id="food" placeholder="e.g. Grilled chicken salad" required>
+                </div>
+                <div class="field">
+                    <label for="calories">Calories</label>
+                    <input type="number" name="calories" class="input" id="calories" placeholder="e.g. 420" min="0" required>
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add food</button>
             </form>
         </div>
+    </section>
 
-    </div>
-    <table class="table table-hover table-bordered">
-        <!-- Dynamically generated list items for added meals -->
-        <tr class="badge-primary text-dark">
-            <th>Food</th>
-            <th style="text-align: center;">Calories</th>
-            <th style="text-align: center;">Date</th>
-        </tr>
-        {% for food in food_instance_list %}
-        <tr>
-            <td width="33%"><span class="badge badge-primary badge-pill" style="font-size: 20px;">{{food.food}}</span></td>
-            <td width="33%" style="text-align: center;"><span class="badge badge-primary badge-pill" style="font-size: 20px;">{{food.calories}} cal</span></td>
-            <td width="33%" align="center"><span class="badge badge-primary badge-pill" style="font-size: 20px;text-align: center;">{{food.date_today}}</span></td>
-        </tr>
-        {% endfor %}
-     
-    </table>
-    
+    <section class="card">
+        <div class="card-head">
+            <div class="head-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <div>
+                <h2>Meal history</h2>
+                <p>Everything you have logged so far</p>
+            </div>
+            <form action="{% url 'food_form' %}" method="post" class="filter-form">
+                {% csrf_token %}
+                <input type="date" name="date" class="input" aria-label="Filter by date">
+                <button type="submit" class="btn btn-ghost btn-sm"><i class="fa-solid fa-filter"></i> Filter</button>
+                <a href="{% url 'food_form' %}" class="btn btn-quiet btn-sm">Reset</a>
+            </form>
+        </div>
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Food</th>
+                        <th class="num">Calories</th>
+                        <th class="num">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for food in food_instance_list %}
+                    <tr>
+                        <td><span class="chip">{{ food.food }}</span></td>
+                        <td class="num strong">{{ food.calories }} kcal</td>
+                        <td class="num">{{ food.date_today|date:"M j, Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="empty">
+                            <i class="fa-regular fa-clipboard"></i>
+                            No meals logged yet. Add your first one above.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-
-
-
-
-
-
-<!*** NAVIGATION BAR ***>
-
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-
-
-
-<div class="fixed-bottom navbar-light bg-light">
-  <div class="container text-center">
-    <div class="row">
-      <div class="col"><a href="{% url 'food_form' %}" class="btn btn-primary"><i class="fas fa-utensils"></i><br>Food</a></div>
-      <div class="col"><a href="{% url 'excercise_form' %}" class="btn btn-success"><i class="fas fa-running"></i><br>Exercise</a></div>
-      <div class="col"><a href="{% url 'weight_form' %}" class="btn btn-danger"><i class="fas fa-weight"></i><br>Weight</a></div>
-      <div class="col"><a href="#" class="btn btn-warning"><i class="fas fa-chart-bar"></i><br>Data</a></div>
-      <div class="col"><a href="#" class="btn btn-info"><i class="fas fa-chart-line"></i><br>Charts</a></div>
-    </div>
-  </div>
-</div>
+{% endblock %}

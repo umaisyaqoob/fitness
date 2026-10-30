@@ -1,66 +1,47 @@
-<!DOCTYPE html>
-<html>
+{% extends "auth_base.html" %}
 
-<head>
-    <title>Login</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #D0E4FE; /* Light blue background */
-        }
-        /* Additional custom styles can go here */
-    </style>
-</head>
+{% block page_title %}Sign up &middot; FitPulse{% endblock %}
+{% block aside_title %}Start tracking your health in minutes.{% endblock %}
+{% block aside_text %}Create your free account and get a clean dashboard for food, exercise and weight.{% endblock %}
 
-<body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <div><h2 class="">Signup</h2></div>
-            </div>
-                <form action="{% url 'user_signup' %}" method="post" class="mt-4">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="username">Username:</label>
-                        <input type="text" class="form-control" name="username" value="{{username}}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="username">Email:</label>
-                        <input type="email" class="form-control" name="email" value="{{email}}" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" class="form-control" value="{{password_in_process}}" name="password1" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Confirm Password:</label>
-                        <input type="password" class="form-control" value="{{cpassword_in_process}}" name="password2" required>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <div><button type="submit" class="btn btn-primary mr-3">Signup</button></div>
-                        <div>Already have an account? <a href="{% url 'user_login_form' %}">Login</a></div>
-                    </div>
-                </form>
-                {% if form.errors %}
-<div class="alert alert-danger mt-3" role="alert">
-    <strong>Error(s):</strong>
-    <ul>
-        {% for field, errors in form.errors.items %}
-        {% for error in errors %}
-        <li>{{ error }}</li>
-        {% endfor %}
-        {% endfor %}
-    </ul>
-</div>
-{% endif %}
-            </div>
-        </div>
+{% block content %}
+    <h1>Create your account</h1>
+    <p class="sub">Free to set up, ready in under a minute.</p>
+
+    {% if form.errors %}
+    <div class="auth-error">
+        <strong>Please fix the following:</strong>
+        <ul>
+            {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+            {% endfor %}
+        </ul>
     </div>
+    {% endif %}
 
-    <!-- Optional: Include Bootstrap JS and Popper.js for interactive components -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <form action="{% url 'user_signup' %}" method="post">
+        {% csrf_token %}
+        <div class="auth-field">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ form.username.value|default_if_none:'' }}" placeholder="your-username" autocomplete="username" required>
+        </div>
+        <div class="auth-field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ form.email.value|default_if_none:'' }}" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+        <div class="auth-field">
+            <label for="password1">Password</label>
+            <input type="password" id="password1" name="password1" placeholder="Create a password" autocomplete="new-password" required>
+        </div>
+        <div class="auth-field">
+            <label for="password2">Confirm password</label>
+            <input type="password" id="password2" name="password2" placeholder="Repeat your password" autocomplete="new-password" required>
+        </div>
+        <button type="submit" class="auth-submit">Create account <i class="fa-solid fa-arrow-right"></i></button>
+    </form>
+
+    <p class="auth-alt">Already have an account? <a href="{% url 'user_login_form' %}">Log in</a></p>
+    <p class="auth-note"><i class="fa-solid fa-lock"></i> Your data stays private to your account.</p>
+{% endblock %}

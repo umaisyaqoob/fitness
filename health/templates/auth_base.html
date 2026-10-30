@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block page_title %}FitPulse{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        :root {
+            --bg: #f4f6fb;
+            --surface: #ffffff;
+            --border: #e6e9f2;
+            --border-strong: #d5d9e6;
+            --text: #0f1729;
+            --text-soft: #4a5169;
+            --muted: #8a91a6;
+            --brand: #4f46e5;
+            --brand-dark: #4338ca;
+            --radius: 14px;
+            --radius-sm: 10px;
+            --shadow: 0 18px 40px -22px rgba(16, 24, 40, .35);
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; text-decoration: none; }
+
+        .auth-wrap { min-height: 100vh; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); }
+
+        .auth-aside {
+            position: relative; overflow: hidden; color: #fff;
+            background: linear-gradient(155deg, #4338ca 0%, #6d28d9 48%, #1e1b4b 100%);
+            padding: 48px 52px; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .auth-aside::after {
+            content: ""; position: absolute; width: 460px; height: 460px; right: -160px; bottom: -190px;
+            background: radial-gradient(circle, rgba(255, 255, 255, .16), transparent 62%); border-radius: 50%;
+        }
+        .auth-aside::before {
+            content: ""; position: absolute; width: 320px; height: 320px; left: -120px; top: -110px;
+            background: radial-gradient(circle, rgba(255, 255, 255, .12), transparent 65%); border-radius: 50%;
+        }
+        .auth-aside > * { position: relative; z-index: 1; }
+
+        .auth-brand { display: flex; align-items: center; gap: 11px; font-weight: 700; font-size: 16px; }
+        .brand-mark {
+            width: 36px; height: 36px; border-radius: 11px; flex: 0 0 36px;
+            display: grid; place-items: center; color: #fff; font-size: 15px;
+            background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .22);
+        }
+
+        .auth-aside h2 {
+            margin: 0 0 14px; font-size: 34px; line-height: 1.18; font-weight: 700; letter-spacing: -.025em;
+            max-width: 15ch;
+        }
+        .auth-aside .lead { margin: 0; color: rgba(255, 255, 255, .74); max-width: 46ch; font-size: 14.5px; }
+
+        .auth-features { list-style: none; margin: 30px 0 0; padding: 0; display: grid; gap: 13px; max-width: 380px; }
+        .auth-features li { display: flex; align-items: center; gap: 11px; font-size: 13.5px; color: rgba(255, 255, 255, .88); }
+        .auth-features i {
+            width: 26px; height: 26px; flex: 0 0 26px; border-radius: 8px; display: grid; place-items: center;
+            background: rgba(255, 255, 255, .14); font-size: 11px;
+        }
+
+        .auth-foot { font-size: 12px; color: rgba(255, 255, 255, .55); }
+
+        .auth-main { display: grid; place-items: center; padding: 44px 24px; }
+        .auth-card {
+            width: 100%; max-width: 400px; background: var(--surface);
+            border: 1px solid var(--border); border-radius: 18px; padding: 32px; box-shadow: var(--shadow);
+        }
+        .auth-card h1 { margin: 0; font-size: 21px; font-weight: 700; letter-spacing: -.02em; }
+        .auth-card .sub { margin: 6px 0 24px; color: var(--muted); font-size: 13.5px; }
+
+        .auth-field { margin-bottom: 16px; }
+        .auth-field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-soft); margin-bottom: 7px; }
+        .auth-field input {
+            height: 44px; width: 100%; padding: 0 13px;
+            border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+            background: #fff; color: var(--text); font: inherit; font-size: 14px;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        .auth-field input::placeholder { color: #aab0c0; }
+        .auth-field input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(79, 70, 229, .13); }
+
+        .auth-submit {
+            width: 100%; height: 44px; border: none; border-radius: var(--radius-sm); cursor: pointer;
+            background: var(--brand); color: #fff; font: inherit; font-size: 14px; font-weight: 600;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            transition: background .15s ease;
+        }
+        .auth-submit:hover { background: var(--brand-dark); }
+
+        .auth-alt { margin: 20px 0 0; font-size: 13px; color: var(--muted); text-align: center; }
+        .auth-alt a { color: var(--brand); font-weight: 600; }
+        .auth-alt a:hover { text-decoration: underline; }
+
+        .auth-error {
+            margin-bottom: 18px; padding: 11px 14px; border-radius: var(--radius-sm);
+            background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; font-size: 12.5px;
+        }
+        .auth-error ul { margin: 6px 0 0; padding-left: 18px; }
+        .auth-note { margin: 18px 0 0; font-size: 11.5px; color: var(--muted); text-align: center; }
+
+        @media (max-width: 900px) {
+            .auth-wrap { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+            .auth-aside { padding: 30px 24px; }
+            .auth-aside h2 { font-size: 24px; max-width: none; }
+            .auth-features, .auth-foot, .auth-aside .lead { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="auth-wrap">
+    <aside class="auth-aside">
+        <div class="auth-brand">
+            <div class="brand-mark"><i class="fa-solid fa-bolt"></i></div>
+            <span>FitPulse</span>
+        </div>
+
+        <div>
+            <h2>{% block aside_title %}Your fitness journey, in one dashboard.{% endblock %}</h2>
+            <p class="lead">{% block aside_text %}Track food, exercise and weight in a single place and see the habits that actually move the needle.{% endblock %}</p>
+            <ul class="auth-features">
+                <li><i class="fa-solid fa-utensils"></i> Log meals and calories in seconds</li>
+                <li><i class="fa-solid fa-person-running"></i> Keep every workout and rep count</li>
+                <li><i class="fa-solid fa-weight-hanging"></i> Watch your weight trend over time</li>
+            </ul>
+        </div>
+
+        <p class="auth-foot">&copy; {% now "Y" %} FitPulse &middot; Health Tracker</p>
+    </aside>
+
+    <main class="auth-main">
+        <div class="auth-card">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
+</body>
+</html>
